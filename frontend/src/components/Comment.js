@@ -44,7 +44,7 @@ class Comment extends React.Component {
                 <Col sm={9} >
                     <div style={{overflowY:"scroll",height:"100px",paddingTop:'4px'}}>
                         {/* <h2 className="font-weight-bold text-light rounded border border-dark" style={{backgroundColor:"#d3d3d3",display:'inline',padding:'2px'}}>{this.props.createdBy}</h2> */}
-                        <p><h2 className="font-weight-bold text-light rounded border border-dark" style={{backgroundColor:"#000000",display:'inline',padding:'2px'}}>{this.props.createdBy}</h2> commented on {this.props.comment.date}</p>
+                        <p><h2 className="font-weight-bold text-light rounded border border-dark" style={{backgroundColor:"#000000",display:'inline',padding:'2px'}}><a href={'/profile/'+this.props.comment.createdBy.email}>{this.props.comment.createdBy.first_name}</a></h2> commented on {this.props.comment.date}</p>
                         <p style={{backgroundColor:"#d3d3d3",marginTop:"4px"}} className="border border-black">{this.props.content}</p>
                     </div>
                 </Col>

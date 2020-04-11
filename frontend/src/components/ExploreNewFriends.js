@@ -170,7 +170,7 @@ class ExploreNewFriend extends React.Component {
                 </Col>
                 <Col sm={8} >
                     <Card style={{margin:'0.5rem',textAlign:'left'}}>
-                        <Card.Body>{n.email}</Card.Body>
+                        <Card.Body><a href={'/profile/'+n.email}>{n.email}</a></Card.Body>
                     </Card>
                 </Col>
                 <Col sm={2}>

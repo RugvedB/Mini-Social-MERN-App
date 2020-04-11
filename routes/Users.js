@@ -64,7 +64,7 @@ users.post('/getAllPostByMyFriends',checkAuth,async(req,res)=>{
         path:'Comments',
         populate:{
           path:'createdBy',
-          select:'_id first_name profile_pic date'
+          select:'_id first_name profile_pic date email'
           // populate:'profile_pic'
         }
       }
@@ -109,7 +109,7 @@ users.post('/getAllPostForProfile',checkAuth,async(req,res)=>{
         path:'Comments',
         populate:{
           path:'createdBy',
-          select:'_id first_name profile_pic date'
+          select:'_id first_name profile_pic date email'
           // populate:'profile_pic'
         }
       }
@@ -166,7 +166,7 @@ users.post('/myallposts',checkAuth,async(req,res)=>{
         path:'Comments',
         populate:{
           path:'createdBy',
-          select:'_id first_name profile_pic'
+          select:'_id first_name profile_pic email'
           // populate:'profile_pic'
         }
       }

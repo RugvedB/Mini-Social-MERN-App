@@ -57,7 +57,7 @@ shouldComponentUpdate(nextProps) {
                 <Card.Body>
               <Card.Title><h1>{this.props.post.caption}</h1></Card.Title>
                   <Card.Text>
-                  Posted created by <span className="font-weight-bold">{this.props.post.createdBy.email}</span> on {this.props.post.date}.
+                  Posted created by <span className="font-weight-bold"><a href={"/profile/"+this.props.post.createdBy.email}>{this.props.post.createdBy.email}</a></span> on {this.props.post.date}.
                   </Card.Text>
               
               <Button  value="Liked" index={this.props.index} id={this.props.post._id} onClick={this.props.parent.handleLike} variant="primary">Likes <Badge variant="light">{this.props.post.Likes.length}</Badge></Button>
@@ -98,7 +98,7 @@ shouldComponentUpdate(nextProps) {
                                     // if(!cmt.content){
                                     
                                     // }
-                                    //console.log('cmt.createdBy.first_name'+cmt.createdBy.first_name)
+                                    console.log('cmt.createdBy.first_name'+cmt.createdBy.email)
                                     return (
                                     <>
                                         {/* <Comment cmt={cmt.content} /> */}

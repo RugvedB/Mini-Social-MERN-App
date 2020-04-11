@@ -63,6 +63,7 @@ class MyTimeline extends React.Component {
         id:this.props.parent.state.currentUser._id
       }
       allposts=await getAllPostForProfileFun(data)
+      console.log('allposts.data.Data.length: '+allposts.data.Data.length)
     }
     
     else{
@@ -192,7 +193,7 @@ class MyTimeline extends React.Component {
         {/* <Container style={{ overflowY:'scroll',maxHeight:'2000px' }}> */}
         <Container>
         
-{this.props.name!=="MyTimeline" && <Form  className="text-left">
+{this.props.name=="Timeline" && <Form  className="text-left">
 
 <Form.Group  controlId="exampleForm.ControlTextarea1">
     

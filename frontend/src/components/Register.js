@@ -33,13 +33,14 @@ class Register extends React.Component {
       password:this.state.password
     }
     const response=await register(data)
-    console.log("Register:register: status :"+response.data.status)
+    // console.log("Register:register: status :"+response.data.status)
     
-    if(response.data.status=="fail"){
-      this.props.history.push(`/error`)
+    if(response.data.status=="success"){
+      this.props.history.push(`/login`)
+      
       return 
     }
-    this.props.history.push(`/login`)
+    this.props.history.push(`/error`)
     // this.props.history.push(`/verify`)
     
   }

@@ -34,7 +34,11 @@ export const register = async(data)=> {
     return result
   }
   catch(err){
-    return -1
+    const response={
+      data:{
+      status:'fail'
+    }}
+    return response
   }
 
     
@@ -106,15 +110,17 @@ export const getUserByGmail=async(data)=>{
 }
 
 export const getAllPostForProfileFun=async(data)=>{
+  
   try{
   const result=await axios.post('/users/getAllPostForProfile',{id:data.id},
   {
     headers:{
       'authorization':'Bearer '+localStorage.usertoken,
-      "Content-type": "multipart/form-data",
+      // "Content-type": "multipart/form-data",
     }
   }
   )
+  console.log('result : '+result)
   return result
 }
 catch(err){

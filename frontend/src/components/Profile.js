@@ -65,10 +65,11 @@ class Profile extends React.Component {
   }
 //done
   async componentDidMount() {
-    
+    try{
     if(!checktoken()){
       return
     }
+    
     let email=this.props.history.location.pathname.split('/')[2]
     
     // let currentUser=await currentUserFun()
@@ -105,6 +106,10 @@ class Profile extends React.Component {
       
     })
     //this.state.currentUser.profile_pic
+  }
+  catch(err){
+    this.props.history.push(`/error`)
+  }
     
   }
 
@@ -281,11 +286,11 @@ onSelect={(k)=>{  this.setState({currentTab:k})}}
 
   </Tab>
   
-  <Tab eventKey="Friends" title="Friends">
+  {/* <Tab eventKey="Friends" title="Friends">
   
     <ExploreNewFriends handleToast={this.handleToast} name="Friends" typeTab={this.state.currentTab} />
   </Tab>
-  
+   */}
 
   
   
