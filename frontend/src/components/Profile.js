@@ -14,6 +14,7 @@ import './Loading.css'
 
 import { getAllPostForProfileFun,getUserByGmail,checktoken,currentUserFun,changeProfilePicFun,changeCoverPicFun,createStatusPostFun,updateProfileFun } from '../functions/funtions'
 import Verify from './Verify';
+import DisplayImage from './DisplayImage'
 
 class Profile extends React.Component {
   constructor(props){
@@ -48,6 +49,7 @@ class Profile extends React.Component {
       ToastContent:'',
       redirect:false,
       Loading:true,
+      isFriend:false
       
 
     }
@@ -77,11 +79,15 @@ class Profile extends React.Component {
       email:email
     }
     let currentUser=await getUserByGmail(data)
-    console.log(currentUser.data.Data)
+    
+
+
+    
     
     if(!currentUser.data.status=="success"){
       this.setState({ redirect:true })
     }
+    console.log('currentUser.data.isFriend:'+currentUser.data.isFriend)
 
     this.setState({
       profilePicArray:currentUser.data.Data.profile_pic,
@@ -101,7 +107,8 @@ class Profile extends React.Component {
       first_name:currentUser.data.Data.first_name,
       last_name:currentUser.data.Data.last_name,
       currentUser:currentUser.data.Data,
-      Loading:false
+      Loading:false,
+      isFriend:currentUser.data.isFriend
       
       
     })
@@ -146,6 +153,8 @@ class Profile extends React.Component {
       show:true
     })
   }
+
+  
 
   
 
@@ -207,6 +216,12 @@ class Profile extends React.Component {
                         <pre>{this.state.email}</pre>
                         <p>{this.state.bio}</p>
                       </Card.Text>
+                      {/* {this.state.isFriend && <Button>
+                        Remove Friend
+                      </Button>}
+                      {!this.state.isFriend && <Button>
+                        Add Friend
+                      </Button>} */}
                                                  
 
                     </Card.Body>
@@ -286,11 +301,16 @@ onSelect={(k)=>{  this.setState({currentTab:k})}}
 
   </Tab>
   
-  {/* <Tab eventKey="Friends" title="Friends">
+  <Tab eventKey="Profile pics" title="Profile pics">
   
-    <ExploreNewFriends handleToast={this.handleToast} name="Friends" typeTab={this.state.currentTab} />
+          <DisplayImage images={this.state.profilePicArray} />
   </Tab>
-   */}
+
+  <Tab eventKey="Cover pics" title="Cover pics">
+  
+          <DisplayImage images={this.state.coverPicArray} />
+  </Tab>
+  
 
   
   

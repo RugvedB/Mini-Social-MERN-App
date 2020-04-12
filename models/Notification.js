@@ -29,6 +29,10 @@ const NotificationSchema = new Schema({
   date: {
     type: Date,
     default: Date.now
+  },
+  link:{
+    type:String,
+    default:''
   }
 })
 

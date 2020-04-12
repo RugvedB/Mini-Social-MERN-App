@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Toast,Card,Button,Form,Row,Col, Container,Image,Tabs,Tab,Badge,Alert,Accordion,InputGroup,FormControl } from 'react-bootstrap';
 import { BrowserRouter as Router, Route,Switch,Redirect } from 'react-router-dom'
 
-import { allusersFun,checktoken, allusersmyfriendsFun,addFriendFun,removeFriendFun } from '../functions/funtions'
+import { sendFriendRequestFun,allusersFun,checktoken, allusersmyfriendsFun,addFriendFun,removeFriendFun } from '../functions/funtions'
 
 class ExploreNewFriend extends React.Component {
   constructor(props){
@@ -63,6 +63,7 @@ class ExploreNewFriend extends React.Component {
     const response=await addFriendFun(bodyParameters)
     //console.log("ExploreNewFriends:addFriendFun: status :"+response.data.status)
    
+    // const response=await sendFriendRequestFun(bodyParameters)
 
     this.setState({ Loading:true })
   const allusers=await allusersFun()
@@ -166,7 +167,7 @@ class ExploreNewFriend extends React.Component {
           //console.log("myDisplayList ::" +n._id)
             return <Row style={{display: 'flex',alignItems: 'center',overflow:'hidden'}} className="border border-primary m-2">
                 <Col sm={2} >
-                    <Image style={{height:'auto',width:'100%',margin:'0.5rem'}} src={n.profile_pic[n.profile_pic.length-1]} roundedCircle />
+                    <Image style={{height:'100px',width:'100%',margin:'0.5rem'}} src={n.profile_pic[n.profile_pic.length-1]} roundedCircle />
                 </Col>
                 <Col sm={8} >
                     <Card style={{margin:'0.5rem',textAlign:'left'}}>
@@ -212,7 +213,7 @@ class ExploreNewFriend extends React.Component {
           if(this.state.myfriends.some(f=>f._id ===n._id)==1){
             return <Row style={{display: 'flex',alignItems: 'center',overflow:'hidden'}} className="border border-primary m-2">
                 <Col sm={2} >
-                    <Image style={{height:'auto',width:'100%',margin:'0.5rem'}} src={n.profile_pic[n.profile_pic.length-1]} roundedCircle />
+                    <Image style={{height:'100px',width:'100%',margin:'0.5rem'}} src={n.profile_pic[n.profile_pic.length-1]} roundedCircle />
                 </Col>
                 <Col sm={8} >
                     <Card style={{margin:'0.5rem',textAlign:'left'}}>

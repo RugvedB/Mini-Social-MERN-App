@@ -272,6 +272,18 @@ export const addFriendFun=async(bodyParameters)=>{
     return result
 } 
 
+export const sendFriendRequestFun=async(bodyParameters)=>{
+  const result=await axios.post('/users/sendFriendRequest',bodyParameters,
+  {
+    headers:{
+      'authorization':'Bearer '+localStorage.usertoken,
+      'Content-Type': 'application/json',
+    }
+  }
+  )
+  return result
+} 
+
 export const createStatusPostFun=async(data)=>{
   const result=await axios.post('/users/createStatusPost',data,
   {

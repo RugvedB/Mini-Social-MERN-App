@@ -30,10 +30,21 @@ users.post('/currentUser',checkAuth,async(req,res,next)=>{
   }
   
 })
-users.post('/getUserByGmail',async(req,res,next)=>{
+users.post('/getUserByGmail',checkAuth,async(req,res,next)=>{
   try{
     const user=await User.findOne({email:req.body.email})
-    return res.json({Data:user,status:'success'})
+    // li=user.MyFriends.some((f)=>f.req.decoded._id)
+    
+    var isFriend=false
+    for(var i=0;i<user.MyFriends.length;i++){
+      if(user.MyFriends[i]==req.decoded._id){
+        isFriend=true
+        break;
+      }
+    }
+    console.log('req.decoded._id:'+req.decoded._id+"  isFriend:"+isFriend)
+
+    return res.json({Data:user,status:'success',isFriend:isFriend})
   }
   catch(err){
     const user=await User.findById(req.decoded._id)
@@ -703,6 +714,51 @@ users.post('/createComment',checkAuth,async (req, res) => {
       
   })
 
+users.post('/sendFriendRequest',checkAuth,(req,res)=>{
+  decoded=req.decoded
+  User.findOne({
+  _id: decoded._id
+  })
+  .then(async(user)=>{
+    if(user){
+
+
+      //
+  try{
+      
+        
+      const notificationData =new Notification ({
+          content: user.email+' sent you a friend request',
+          sentBy:user._id,
+          sentTo:req.body.friendThisUserId,
+          notificationType:"1",
+          link:'/profile/'+user.email
+          
+      })
+
+      
+    
+    
+      
+          await notificationData.save()
+          res.json({'status':'success'})
+  
+        }catch(err){
+          return res.json({status:'fail',Data:err})
+        }
+      
+        
+      //
+      
+    }
+    else{
+      return res.json({status:'fail',Data:'No User'})
+    }  
+  })
+  
+})
+
+
 users.post('/addFriend',checkAuth, (req, res) => {
 //pass it without bearer in this case.....jwt.verify takes token without keyword 'Bearer '
 decoded=req.decoded
@@ -714,7 +770,7 @@ _id: decoded._id
     
     if (user) {
     
-	
+      
 	
   
 
@@ -730,7 +786,8 @@ _id: decoded._id
             content: user.email +" has added you as friend.",
             sentBy:user._id,
             sentTo:req.body.friendThisUserId,
-            notificationType:"1"
+            notificationType:"1",
+            link:'/profile/'+user.email
         })
         
             await notificationData.save()
