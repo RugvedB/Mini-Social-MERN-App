@@ -215,17 +215,21 @@ class ExploreNewFriend extends React.Component {
                 <Col sm={2} >
                     <Image style={{height:'100px',width:'100%',margin:'0.5rem'}} src={n.profile_pic[n.profile_pic.length-1]} roundedCircle />
                 </Col>
-                <Col sm={8} >
+                <Col sm={6} >
                     <Card style={{margin:'0.5rem',textAlign:'left'}}>
                         <Card.Body>{n.email}</Card.Body>
                     </Card>
                 </Col>
-                <Col sm={2}>
+                <Col sm={4}>
                     
                     
                     {/* {this.state.myfriends.some(f=>f._id ===n._id)==1 && <Button onClick={this.handleRemove} id={n._id} className="text-center" variant="primary">Remove Friend</Button>} */}
-                    <Button onClick={this.handleRemove} id={n._id} className="text-center" variant="primary">Remove Friend</Button>
+                    <p><Button onClick={this.handleRemove} id={n._id} className="text-center mr-1" variant="primary">Remove</Button>
+                    <Button id={n._id} className="text-center" variant="primary"><a style={{color:"#FFFFFF"}}  href={"/chat/"+n.email}>Chat</a></Button></p>
                 </Col>
+                {/* <Col sm={2}>
+                    
+                </Col> */}
                 
             </Row>
           }      

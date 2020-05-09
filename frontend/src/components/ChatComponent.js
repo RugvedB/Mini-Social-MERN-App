@@ -46,17 +46,33 @@ const ChatComponent = () => {
     const classes = useStyles();
     const [currentUser,setCurrentUser] = useState(null)
     const [frn,setFrn] = useState(null)
+    const [roomName,setRoomName] = useState('')
     const [msgArray,setMsgArray] = useState([])
-    const ENDPOINT = 'localhost:5000';
+    const ENDPOINT = 'http://localhost:5000/';
     
 
     const [msg,setMsg] = useState('')
 
-    React.useEffect(()=>{
+    useEffect(()=>{
         if(!socket){
             socket=io(ENDPOINT)
             console.log('Socket created!')
             console.log(socket)
+
+            // socket.on('message',(data)=>{
+            //     const chatArrayInitialize = data.chatArray
+            //     const arrivalMsg = data.text
+            //     console.log(data)
+            //     setMsgArray(chatArrayInitialize)
+            // })
+
+            socket.on('chatData',(data)=>{
+                const chatArrayInitialize = data.chatArray
+                
+                console.log('chatData')
+                console.log(data)
+                setMsgArray(chatArrayInitialize)
+            })
 
            
         }
@@ -70,18 +86,48 @@ const ChatComponent = () => {
             setCurrentUser(currentUser_var)
 
             url = url.split('/chat/')[1]
-            let me_url_mail = url.split('/')[0]
-            let friend_url_mail = url.split('/')[1]
+            //let me_url_mail = url.split('/')[0]
+            let friend_url_mail = url.split('/')[0]
             
             const resp_frn = await getUserByGmail({email:friend_url_mail})
-            const resp_me = await getUserByGmail({email:me_url_mail})
-            if(currentUser_var.email == me_url_mail && resp_frn.data.status == "success" && resp_me.data.status == "success"){
+            //const resp_me = await getUserByGmail({email:me_url_mail})
+            if(resp_frn.data.status == "success"){
                 console.log(resp_frn.data.Data)
-                console.log(resp_me.data.Data)
+                // console.log(resp_me.data.Data)
                 setFrn(resp_frn.data.Data)
                 
+                console.log('currentUser_var.email +"-"+ resp_frn.data.Data.email')
+                console.log(currentUser_var.email +"-"+ resp_frn.data.Data.email)
                 //Now as both are authorized ...get the messages
-                getTheMessages(currentUser_var.email,resp_frn.email)
+                const comp = currentUser_var.email.localeCompare(resp_frn.data.Data.email)
+                let roomName = ""
+                if(comp == -1){
+                    roomName = currentUser_var.email +"-"+ resp_frn.data.Data.email
+                }
+                else if(comp == 0){
+                    roomName = currentUser_var.email +"-"+ resp_frn.data.Data.email
+                }
+                else{
+                    roomName = resp_frn.data.Data.email +"-"+ currentUser_var.email
+                }
+                setRoomName(roomName)
+                socket.emit('sendInfoToServer',{currentUser:currentUser_var,frn:resp_frn.data.Data,roomName:roomName})
+                
+
+                socket.on('newMessageIncoming',(data)=>{
+                    const sender = data.sender
+                    const content =  data.content
+                    const receiver = data.receiver
+                    
+                    let newMsg =    
+                        {
+                            sender:sender.email,
+                            receiver:currentUser_var.email,
+                            content:content
+                        }
+                    
+                    setMsgArray(msgArray => [...msgArray,newMsg])
+                })
 
             }
             else{
@@ -94,75 +140,22 @@ const ChatComponent = () => {
         
     },[])
     
-    function getTheMessages(myemail,frnemail){
-        
-        let arr=[
-            {
-                sender:myemail,
-                receiver:frnemail,
-                content:"Hey"
-            },
-            {
-                sender:myemail,
-                receiver:frnemail,
-                content:"ajbbdsbh"
-            },
-            {
-                receiver:myemail,
-                sender:frnemail,
-                content:"asjiahsauhsuabsuabsasbahsbahbsasubuasbbausvausbuabsuansiansainsiansiasnaisnausnausnausnuasnuansausnansausbsausbyabsyasasyb"
-            },
-            {
-                sender:myemail,
-                receiver:frnemail,
-                content:"umas inas dasudbuahda swhat!!!"
-            },
-            {
-                senrer:myemail,
-                receiver:frnemail,
-                content:"lol"
-            },
-            {
-                sender:myemail,
-                receiver:frnemail,
-                content:"1234"
-            },
-            {
-                sender:myemail,
-                receiver:frnemail,
-                content:"Hey"
-            },
-            {
-                sender:myemail,
-                receiver:frnemail,
-                content:"Hey!"
-            },
-            {
-                sender:myemail,
-                receiver:frnemail,
-                content:"qwerty"
-            },
-
-        ]
-        
-        console.log(arr)
-        
-        setMsgArray(arr)
-    }
+    
    
 
     function handleSend(){
         console.log("Btn: "+msg)
-        let mychat =[
-            ...msgArray,
+        let newMsg=
             {
-                sender:currentUser.email,
-                receiver:frn.email,
+                sender:currentUser._id,
+                receiver:frn._id,
                 content:msg
             }
-        ]
+
+
+        socket.emit('newMessage',{currentUser:currentUser,frn:frn,roomName:roomName,content:msg})
         
-        setMsgArray(mychat)
+        setMsgArray(msgArray => [...msgArray,newMsg])
         
     }
     
@@ -171,7 +164,7 @@ const ChatComponent = () => {
     
     
     
-    if(currentUser && frn && msgArray.length>0){
+    if(currentUser && frn && msgArray.length>=0){
         console.log(msgArray)
         return (
             
@@ -179,7 +172,9 @@ const ChatComponent = () => {
                     <Paper elevation={3} >
                         <ScrollToBottom className={classes.scroll}>
                             {msgArray.map((data,index)=>{
-                                if(data.sender == currentUser.email){
+                                
+                                if(data.sender == currentUser._id){
+                                    console.log(data.sender +" == "+ currentUser._id)
                                     return(
                                         <div style={{float:"right",clear:"both"}} className="row ml-1 mr-1 mt-1">
                                             <Chip
@@ -193,6 +188,7 @@ const ChatComponent = () => {
                                         )
                                 }
                                 else{
+                                    console.log(data.sender +" != "+ currentUser._id)
                                     return(
                                         <div style={{float:"left",clear:"both"}} className="row ml-1 mr-1 mt-1">
                                             <Chip
@@ -221,7 +217,7 @@ const ChatComponent = () => {
                                     <TextField onChange={(e) => setMsg(e.target.value)} id="standard-basic" label="Send Message" style={{width:"100%"}} />
                                 </div>
                                 <div className="col-2">
-                                    <Button onClick={(e) => handleSend()} variant="contained" color="primary" style={{width:"100%"}}>Primary</Button>
+                                    <Button onClick={(e) => handleSend()} variant="contained" color="primary" style={{width:"100%"}}>Send</Button>
                                 </div>
                             </div>
                         </div>    
@@ -235,8 +231,8 @@ const ChatComponent = () => {
     }
     else{
         return (
-            <div className={classes.root}>
-                SOmething is missing
+            <div className="container-fluid">
+                Loading...
             </div>
         );
     }

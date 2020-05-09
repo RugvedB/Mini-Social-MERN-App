@@ -7,6 +7,7 @@ require('dotenv').config()
 const path = require("path")
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
+const Chat = require('./models/Chat')
 
 // ... other app.use middleware 
 app.use(express.static(path.join(__dirname, "frontend", "build")))
@@ -14,6 +15,53 @@ app.use(express.static(path.join(__dirname, "frontend", "build")))
 
 io.on('connection', (socket) => {
     console.log('User joined')
+    socket.on('sendInfoToServer',async (data)=>{
+        const currUser = data.currentUser
+        const frn = data.frn
+        const roomName = data.roomName
+        
+        console.log(currUser.email)
+        console.log(frn.email)
+        console.log(roomName)
+        
+        socket.join(roomName)
+        
+        //get messages of this room
+        const chatArray = await Chat.find({ roomName:roomName }).sort({ date: "asc" }).limit(20)
+        console.log('chatArray')
+        console.log(chatArray)
+
+        // socket.broadcast.to(roomName).emit('message', { user: currUser, text: `${currUser.email} has joined!` ,chatArray:chatArray});
+        socket.emit('chatData', { chatArray:chatArray});
+        console.log('emitted chatData')
+        
+        
+        //io.to(roomName).emit('roomData', { room: roomName, users: getUsersInRoom(user.room) });
+    })
+    socket.on('newMessage',async (data)=>{
+        // {currentUser:currentUser,frn:frn,roomName:roomName,content:msg}
+        // {
+        //     sender:currentUser.email,
+        //     receiver:frn.email,
+        //     content:msg
+        // }
+
+
+        const chat = new Chat({
+            roomName:data.roomName,
+            sender:data.currentUser,
+            receiver:data.frn,
+            content:data.content
+        })
+        console.log(JSON.stringify(data.frn.email))
+        console.log("Sender : "+data.currentUser.email)
+        console.log("Receiver : "+data.frn.email)
+        await chat.save().then(res=> console.log(res)).catch(err => console.log(err))
+        
+        
+        socket.broadcast.to(data.roomName).emit('newMessageIncoming', { sender: data.currentUser,receiver:data.frn, content: data.content });
+    })
+    
 });
 
 

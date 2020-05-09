@@ -36,7 +36,7 @@ class App extends Component {
             {/* <Route exact path="/Headlines" component={Headlines} /> */}
             {/* <Route exact path="/Selection" component={Selection} /> */}
 
-            <Route path="/chat/:me/:friend" component={ChatComponent} />
+            <Route path="/chat/:friend" component={ChatComponent} />
 
             <Redirect to="/login" />
       
