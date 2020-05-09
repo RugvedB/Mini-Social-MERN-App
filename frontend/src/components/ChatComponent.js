@@ -10,7 +10,9 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import ScrollToBottom,{ useScrollToBottom,useSticky } from 'react-scroll-to-bottom';
 
+import io from 'socket.io-client'
 
+let socket;
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -45,9 +47,20 @@ const ChatComponent = () => {
     const [currentUser,setCurrentUser] = useState(null)
     const [frn,setFrn] = useState(null)
     const [msgArray,setMsgArray] = useState([])
+    const ENDPOINT = 'localhost:5000';
     
 
     const [msg,setMsg] = useState('')
+
+    React.useEffect(()=>{
+        if(!socket){
+            socket=io(ENDPOINT)
+            console.log('Socket created!')
+            console.log(socket)
+
+           
+        }
+    },[])
 
     useEffect(async ()=>{
         let url = window.location.href
