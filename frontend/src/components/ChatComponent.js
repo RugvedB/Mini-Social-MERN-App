@@ -48,7 +48,8 @@ const ChatComponent = () => {
     const [frn,setFrn] = useState(null)
     const [roomName,setRoomName] = useState('')
     const [msgArray,setMsgArray] = useState([])
-    const ENDPOINT = 'http://localhost:5000/';
+    // const ENDPOINT = 'http://localhost:5000/';
+    const ENDPOINT = 'https://mini-social-react-app.herokuapp.com/';
     
 
     const [msg,setMsg] = useState('')
