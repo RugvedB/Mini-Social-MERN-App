@@ -15,6 +15,11 @@ import './Loading.css'
 import { checktoken,currentUserFun,changeProfilePicFun,changeCoverPicFun,createStatusPostFun,updateProfileFun } from '../functions/funtions'
 import Verify from './Verify';
 
+
+import io from 'socket.io-client'
+let socket;
+
+
 class Home extends React.Component {
   constructor(props){
     super(props)
@@ -109,6 +114,9 @@ class Home extends React.Component {
       
     })
     //this.state.currentUser.profile_pic
+
+
+    
     
   }
 
