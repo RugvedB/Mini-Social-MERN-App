@@ -13,6 +13,7 @@ import Footer from './components/Footer'
 import ErrorComponent from './components/ErrorComponent';
 import Profile from './components/Profile'
 import Verify from './components/Verify'
+import ChatComponent from './components/ChatComponent';
 class App extends Component {
   render() {
     return (
@@ -34,6 +35,9 @@ class App extends Component {
 
             {/* <Route exact path="/Headlines" component={Headlines} /> */}
             {/* <Route exact path="/Selection" component={Selection} /> */}
+
+            <Route path="/chat/:me/:friend" component={ChatComponent} />
+
             <Redirect to="/login" />
       
         </Switch>
