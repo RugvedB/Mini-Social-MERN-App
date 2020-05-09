@@ -45,7 +45,7 @@ const ChatComponent = () => {
     const [currentUser,setCurrentUser] = useState(null)
     const [frn,setFrn] = useState(null)
     const [msgArray,setMsgArray] = useState([])
-    const [redirect,setRedirect] = useState(false)
+    
 
     const [msg,setMsg] = useState('')
 
@@ -87,38 +87,47 @@ const ChatComponent = () => {
             {
                 sender:myemail,
                 receiver:frnemail,
+                content:"Hey"
             },
             {
                 sender:myemail,
                 receiver:frnemail,
+                content:"ajbbdsbh"
             },
             {
                 receiver:myemail,
                 sender:frnemail,
+                content:"asjiahsauhsuabsuabsasbahsbahbsasubuasbbausvausbuabsuansiansainsiansiasnaisnausnausnausnuasnuansausnansausbsausbyabsyasasyb"
             },
             {
                 sender:myemail,
                 receiver:frnemail,
+                content:"umas inas dasudbuahda swhat!!!"
             },
             {
                 senrer:myemail,
                 receiver:frnemail,
+                content:"lol"
             },
             {
                 sender:myemail,
                 receiver:frnemail,
+                content:"1234"
             },
             {
                 sender:myemail,
                 receiver:frnemail,
+                content:"Hey"
             },
             {
                 sender:myemail,
                 receiver:frnemail,
+                content:"Hey!"
             },
             {
                 sender:myemail,
                 receiver:frnemail,
+                content:"qwerty"
             },
 
         ]
@@ -131,12 +140,20 @@ const ChatComponent = () => {
 
     function handleSend(){
         console.log("Btn: "+msg)
+        let mychat =[
+            ...msgArray,
+            {
+                sender:currentUser.email,
+                receiver:frn.email,
+                content:msg
+            }
+        ]
+        
+        setMsgArray(mychat)
         
     }
     
-    if(redirect){
-        return <Redirect to="/error" />
-    }
+    
 
     
     
@@ -154,7 +171,7 @@ const ChatComponent = () => {
                                         <div style={{float:"right",clear:"both"}} className="row ml-1 mr-1 mt-1">
                                             <Chip
                                                 avatar={<Avatar alt="Natacha" src={currentUser.profile_pic[currentUser.profile_pic.length-1]} />}
-                                                label="Primary left"
+                                                label={data.content}
                                                 clickable
                                                 color="primary"
                                                 className={classes.chip}
@@ -167,7 +184,7 @@ const ChatComponent = () => {
                                         <div style={{float:"left",clear:"both"}} className="row ml-1 mr-1 mt-1">
                                             <Chip
                                                 avatar={<Avatar alt="Natacha" src={frn.profile_pic[frn.profile_pic.length-1]} />}
-                                                label="Primary clickable"
+                                                label={data.content}
                                                 clickable
                                                 color="primary"
                                                 className={classes.chip}
