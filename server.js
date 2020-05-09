@@ -27,9 +27,9 @@ io.on('connection', (socket) => {
         socket.join(roomName)
         
         //get messages of this room
-        const chatArray = await Chat.find({ roomName:roomName }).sort({ date: "asc" }).limit(20)
+        let chatArray = await Chat.find({ roomName:roomName }).sort({ date: "desc" }).limit(40)
         console.log('chatArray')
-        console.log(chatArray)
+        chatArray = chatArray.reverse()
 
         // socket.broadcast.to(roomName).emit('message', { user: currUser, text: `${currUser.email} has joined!` ,chatArray:chatArray});
         socket.emit('chatData', { chatArray:chatArray});
