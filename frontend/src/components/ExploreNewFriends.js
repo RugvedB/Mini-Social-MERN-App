@@ -165,6 +165,7 @@ class ExploreNewFriend extends React.Component {
         
         {this.state.myDisplayList.map(n=>{
           //console.log("myDisplayList ::" +n._id)
+          if(n.isVerified == "true"){
             return <Row style={{display: 'flex',alignItems: 'center',overflow:'hidden'}} className="border border-primary m-2">
                 <Col sm={2} >
                     <Image style={{height:'100px',width:'100%',margin:'0.5rem'}} src={n.profile_pic[n.profile_pic.length-1]} roundedCircle />
@@ -180,7 +181,7 @@ class ExploreNewFriend extends React.Component {
                     
                 </Col>
                 
-            </Row>      
+            </Row>}      
         })}  
         </>
     
@@ -210,6 +211,7 @@ class ExploreNewFriend extends React.Component {
         
         {this.state.myDisplayList.map(n=>{
           //console.log("myDisplayList ::" +n._id)
+        if(n.isVerified == "true"){
           if(this.state.myfriends.some(f=>f._id ===n._id)==1){
             return <Row style={{display: 'flex',alignItems: 'center',overflow:'hidden'}} className="border border-primary m-2">
                 <Col sm={2} >
@@ -232,7 +234,7 @@ class ExploreNewFriend extends React.Component {
                 </Col> */}
                 
             </Row>
-          }      
+          }}    
 
         })}  
         </>
