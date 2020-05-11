@@ -6,6 +6,7 @@ import { Toast,Card,Button,Tooltip,OverlayTrigger,Form,Row,Col, Container,Modal,
 import axios from 'axios'
 
 import { register } from '../functions/funtions' 
+import './Loading.css'
 
 class Register extends React.Component {
   constructor(props){
@@ -15,7 +16,8 @@ class Register extends React.Component {
       lastname:'',
       password:'',
       confirm_password:'',
-      email:''
+      email:'',
+      Loading:false
     }
     this.handleChange=this.handleChange.bind(this)
     this.handleSubmit=this.handleSubmit.bind(this)
@@ -32,10 +34,18 @@ class Register extends React.Component {
       email:this.state.email,
       password:this.state.password
     }
+    console.log('in register')
+    this.setState({Loading:true})
     const response=await register(data)
-    // console.log("Register:register: status :"+response.data.status)
-    
+    console.log("Register:register: status :"+JSON.stringify(response.data))
+    this.setState({Loading:false})
+
     if(response.data.status=="success"){
+      if (response.data.mailStatus == 'fail'){
+        alert("Some error has occured while sending mail. Please enter valid mail.")
+        return
+      }
+      alert('Mail Sent Successfully!')
       this.props.history.push(`/login`)
       
       return 
@@ -54,6 +64,11 @@ class Register extends React.Component {
   }
 
   render() {
+    if(this.state.Loading){
+      return(
+          <div class="loader"></div>
+      )
+    }
     
     return (
       <>

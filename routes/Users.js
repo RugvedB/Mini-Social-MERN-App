@@ -322,24 +322,38 @@ users.post('/register',async (req, res) => {
               subject: 'Verification',
               text: 'Verification code : '+key
             };
+            console.log('Now mail code will start')
             
-            transporter.sendMail(mailOptions, function(error, info){
-              if (error) {
-                console.log(error);
-                return res.json({Data:err,status:'fail' })
-              } else {
-                console.log('Email sent: ' + info.response);
-                return res.json({ status:'success',Data: 'Mail sent successfully' })
-              }
-            });
+
+            // transporter.sendMail(mailOptions, async function(error, info){
+            //   if (error) {
+            //     console.log(error);
+            //     return res.json({Data:err,status:'fail' })
+            //   } else {
+            //     console.log('Email sent: ' + info.response);
+            //     return res.json({ status:'success',Data: 'Mail sent successfully' })
+            //   }
+            // });
+
+            //
+            let resp= await wrapedSendMail(mailOptions,transporter);
+            //
+            console.log('resp:'+resp)
+            
 
             //end
 
-
+            console.log('Outside mail code')
                 
                 
                 //
-                return res.json({ status:'success',Data: userData.email + ' Registered!' })
+                if(resp){
+                  return res.json({ status:'success',mailStatus:'success',Data: userData.email + ' Registered!' })
+                }
+                else{
+                  return res.json({ status:'success',mailStatus:'fail',Data: 'Some error has occured while sending email. Enter valid mail.' })
+                }
+                
               }
               catch(err){
                 return res.json({Data:err,status:'fail' })
@@ -353,12 +367,28 @@ users.post('/register',async (req, res) => {
 
         }
         else {
+          console.log('User alreaady exists')
             return res.json({ error: 'User already exists',Data:'User already exists',status:'fail' })
         }
         
         
     })
 
+    async function wrapedSendMail(mailOptions,transporter){
+      return new Promise((resolve,reject)=>{
+
+        transporter.sendMail(mailOptions, function(error, info){
+          if (error) {
+              console.log("error is "+error);
+             resolve(false); // or use rejcet(false) but then you will have to handle errors
+          } 
+         else {
+             console.log('Email sent: ' + info.response);
+             resolve(true);
+          }
+         });
+      })
+    }
 
 
     users.post('/login',async (req, res) => {
